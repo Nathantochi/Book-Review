@@ -74,16 +74,11 @@ export const updateBook = async (req, res) => {
             data: []
         })
     }
-    const updatedBook = await book.update({
-        title,
-        author,
-        year,
-        summary
-    })
+    await book.update(req.body)
     res.status(200).json({
         status: 'true',
         message: 'Book updated successfully',
-        data: updatedBook
+        data: book
     })
 }
 
