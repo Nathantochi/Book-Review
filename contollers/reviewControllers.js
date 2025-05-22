@@ -41,7 +41,6 @@ export const createReview = async (req, res) => {
 
 // Get all reviews
 export const getAllReviews = async (req, res) => {
-
     const  bookId  = Number(req.params.bookId)
     const checkBook = await Book.findByPk(bookId)
     const {year, author} = req.query
@@ -57,7 +56,7 @@ export const getAllReviews = async (req, res) => {
     const where = { bookId};
     if (year) {
         where.year = year;
-    }
+}
 
     if (author) {
         where.author = author;
@@ -81,8 +80,8 @@ export const getAllReviews = async (req, res) => {
 
 //get a single review
 export const getReview = async (req, res) => {
-    const { id } = req.params
-    const review = await Review.findByPk(Number(id))
+    const { reviewid } = req.params
+    const review = await Review.findByPk(Number(reviewid))
     if (!review) {
         return res.status(404).json({
             status: 'false',
@@ -99,9 +98,8 @@ export const getReview = async (req, res) => {
 
 // Update a review
 export const updateReview = async (req, res) => {
-    const { id } = req.params
-    const { title, author, year, summary } = req.body
-    const review = await Review.findByPk(Number(id))
+    const { reviewid } = req.params
+    const review = await Review.findByPk(Number(reviewid))
     if (!review) {
         return res.status(400).json({
             status: 'false',
@@ -119,8 +117,8 @@ export const updateReview = async (req, res) => {
 
 // Delete a review
 export const deleteReview = async (req, res) => {
-    const { id } = req.params
-    const review = await Review.findByPk(Number(id))
+    const { reviewid } = req.params
+    const review = await Review.findByPk(Number(reviewid))
     if (!review) {
         return res.status(400).json({
             status: 'false',

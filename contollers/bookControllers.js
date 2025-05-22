@@ -4,12 +4,16 @@ import Book from '../models/bookModels.js'
 // Create a new book
 export const createBook = async (req, res) => {
     const { title, author, year, summary } = req.body
-    // Check if all fields are provided
+    const file = req.file
+    const filePath = file ? file.path : null
+    const fileName = file ? file.filename : null
         const book = await Book.create({
             title,
             author,
             year,
-            summary
+            summary,
+            filePath,
+            fileName
         })
 
         if (!book) {
@@ -29,7 +33,23 @@ export const createBook = async (req, res) => {
 
 // Get all books
 export const getAllBooks = async (req, res) => {
-    const books = await Book.findAll()
+
+    const LIMIT = 7;
+    const page = parseInt(req.query.page) || 1;
+    const offset = (page - 1) * LIMIT;
+
+    const books = await Book.findAndCountAll(
+        {limit: LIMIT, offset: offset}
+    )
+
+    if (books.count === 0) {
+        return res.status(400).json({
+            status: 'false',
+            message: 'No books found',
+            data: []
+        })
+    }
+
     if (!books) {
         return res.status(400).json({
             status: 'false',
@@ -40,7 +60,7 @@ export const getAllBooks = async (req, res) => {
     res.status(200).json({
         status: 'true',
         message: 'Books retrieved successfully',
-        data: books
+        data: { books: books.rows, total: books.count, Pages: Math.ceil(books.count / LIMIT), currentPage: page }
     })
 }
 
