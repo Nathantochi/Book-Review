@@ -1,4 +1,4 @@
-function APIerrorHandler (
+export function APIerrorHandler (
     status, 
     statuscode = 400,
     message = "Reach admin", 
@@ -8,10 +8,18 @@ function APIerrorHandler (
     return errorResponse(statuscode, message, data)
 }
 
-function successResponse () {
-
+export function successResponse (res, statusCode, message, data = []) {
+    res.status(statusCode).json({
+        status: "success",
+        message,
+        data
+    })
 }
 
-function errorResponse () {
-
+export function errorResponse (res, statusCode, message, data = []) {
+    res.status(statusCode).json({
+        status: "error",
+        message,
+        data
+    })
 }
